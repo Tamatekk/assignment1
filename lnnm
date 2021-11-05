@@ -1,0 +1,39 @@
+#!/bin/bash
+
+ivara=""
+varb=""
+usage="To use this function do: 
+'lnnm file-name' 
+or
+'lnnm -n file-name' for a listed result"
+
+while getopts ":n:h" opt; do
+  case "${opt}" in
+    h)
+      echo $usage
+      exit 1
+      ;;
+    n)
+       i=0    
+       while read -r line; do
+	       i=$(($i+1))
+	       echo "$i. $line"
+       done < "$2"
+      exit 1
+      varb=${OPTARG}
+      ;;
+    :)
+      echo "Error: -${OPTARG} requires a filename"
+      exit 1
+      ;;
+  "?")
+      echo "empty"  
+      ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+while read -r line; do
+  echo "$line"
+done < "$1"

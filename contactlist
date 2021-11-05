@@ -1,0 +1,54 @@
+#!/bin/bash
+
+usage="Usage of function:
+To enter a contact: run './contactlist -a first-name last-name address email phone-number'
+To search for a contact: run './contactlist -v first-name last-name'
+To remove a contact: run './contactlist -r first-name last-name'
+To view all contacts: run './contactlist -e'
+"
+vara=""
+varr=""
+varv=""
+
+contact_dir(){
+if [ ! -d "contactdir" ]
+then	
+	mkdir contactdir
+fi
+}
+contact_dir
+
+while getopts ":a:r:v:he" opt; do
+  case "${opt}" in
+      e)
+	    find ./contactdir/ -type f -iname "Name:*" -printf "%f\n"
+            exit 1
+	;;
+      a)
+            touch ./contactdir/"Name:$2 $3 Address:$4 Email:$5 phone-number:$6"
+            vara=${OPTARG}
+	    exit 1 
+	;;
+      r)
+            rm -i ./contactdir/Name:"$2 $3"*
+	    varr=${OPTARG}
+	    exit 1
+	;;
+      v)
+	    find ./contactdir/ -type f -iname "Name:$2 $3*" -printf "%f\n"
+	    varv=${OPTARG}
+	    exit 1
+	;;
+      h)
+	    echo "$usage"
+	    exit 1
+	;;
+      :)
+	    echo "Error: -${OPTARG} requires an argument"
+        ;;	
+    "?")
+	    echo "Please use the -h option for help with this function"
+      ;;
+  esac
+done
+

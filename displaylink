@@ -1,0 +1,33 @@
+#!/bin/bash
+
+vara=""
+usage="To use this function: do './displaylink 'Site URL'' or  './displaylink -f 'Site URL'' if you want the links to be put into a file (links.txt)"
+
+while getopts ":f:h" opt; do
+  case "${opt}" in
+    f)
+      wget -q "$2" --output-document site.html
+      cat site.html | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u > links.txt
+      echo "view links in 'links.txt' file"
+      vara=${OPTARG}
+      exit 1
+      ;;
+    h)
+      echo $usage
+      exit 1
+      ;;
+    :)
+      echo "Error: -${OPTARG} requires an argument"
+      exit 1
+      ;;
+    "?")
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND - 1))
+
+wget -q "$1" --output-document site.html
+cat site.html | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*" | sort -u
+
